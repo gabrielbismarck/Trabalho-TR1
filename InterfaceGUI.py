@@ -5,8 +5,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 
-# Importações da Camada Física
-# Certifique-se que a pasta "CamadaFisica" está no mesmo diretório deste arquivo
+# Imports
 from CamadaFisica.nrz_polar import codificador_nrz_polar
 from CamadaFisica.manchester import codificador_manchester
 from CamadaFisica.bipolar import codificador_bipolar
