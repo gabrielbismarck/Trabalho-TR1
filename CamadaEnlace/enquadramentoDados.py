@@ -82,32 +82,34 @@ def desenquadrar_flag_insercao_byte(quadro: bytes, flag=b'\x7E', esc=b'\x7D') ->
 def enquadrar_flag_insercao_bit(dado: bytes) -> bytes:
     """
     Enquadra usando bit stuffing com FLAG 0x7E (01111110).
+    Atenção: O último byte do quadro pode ficar incompleto.
     """
     FLAG = b'\x7E'
 
+    # Converte o objeto bytes em uma única string de bits
     bit_str = ''.join(f'{byte:08b}' for byte in dado)
 
     bits_preenchidos = []
     cont_1bit = 0
 
     for bit in bit_str:
+        bits_preenchidos.append(bit)
+        
         if bit == '1':
             cont_1bit += 1
         else:
             cont_1bit = 0
 
-        bits_preenchidos.append(bit)
-
+        # Regra de Stuffing: Insere '0' após o quinto '1' consecutivo
         if cont_1bit == 5:
             bits_preenchidos.append('0')
             cont_1bit = 0
-
-    while len(bits_preenchidos) % 8 != 0:
-        bits_preenchidos.append('0')
-
+            
+    bit_string_final = ''.join(bits_preenchidos)
+    
     bytes_preenchidos = bytes(
-        int(''.join(bits_preenchidos[i:i+8]), 2)
-        for i in range(0, len(bits_preenchidos), 8)
+        int(bit_string_final[i:i+8], 2)
+        for i in range(0, len(bit_string_final), 8)
     )
 
     return FLAG + bytes_preenchidos + FLAG
