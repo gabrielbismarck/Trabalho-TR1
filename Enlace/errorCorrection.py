@@ -1,12 +1,12 @@
 def hamming(dado: bytes) -> bytes:
     """
-    Codifica os dados usando o código de Hamming (7,4).
+    Codifica os dados usando o código de Hamming.
 
     Parâmetros:
     • dado (bytes): Dados de entrada a serem codificados.
 
     Retorna:
-    • bytes: Dados codificados com código Hamming (7,4)
+    • bytes: Dados codificados com código Hamming.
     """
 
     def calcular_bits_paridade(bits_dados: list) -> tuple:

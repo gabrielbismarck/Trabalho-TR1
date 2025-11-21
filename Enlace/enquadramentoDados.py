@@ -2,6 +2,20 @@ import Utils
 
 
 def enquadrar_contagem_caracteres(dado: bytes) -> bytes:
+
+    """
+    Enquadramento por contagem de caracteres.
+
+    Dinâmica:
+        Remove o primeiro byte (que indica o tamanho do quadro) e retorna o restante.
+
+    Parâmetros:
+    • bytes: Apenas o payload (dados da camada de aplicação).
+
+    Retorna:
+    • quadro (bytes): Quadro com o byte de tamanho seguido do payload.
+    """
+    
     tamanho = len(dado) + 1
     tamanho_byte = tamanho.to_bytes(1, byteorder='big')
     quadro = tamanho_byte + dado

@@ -2,21 +2,12 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 import numpy as np 
 
-def byte_formarter(bytes_data):
-    """
-    Transforma bytes em string dos bits correspondentes.
-
-    Parâmetros:
-    • bytes_data (bytes): Dados em bytes.
-
-    Retorna:
-    • str: String dos bits formatada, com espaço entre os bytes.
-
-    Exemplo:
-        Entrada → b'teste'
-        Saída  → "01110100 01100101 01110011 01110100 01100101"
-    """
-    return ' '.join(f"{byte:08b}" for byte in bytes_data)
+def bytes_para_bits(self, dados_em_bytes: bytes) -> list[int]:
+        bits = []
+        for byte in dados_em_bytes:
+            binario = format(byte, '08b')
+            bits.extend([int(b) for b in binario])
+        return bits
 
     
 def findall(substring, string):
@@ -56,3 +47,21 @@ def find_xor(a:str, b:str) -> str:
     for i in range(1, n):  # Skip first bit (CRC standard)
         result += '0' if a[i] == b[i] else '1'
     return result
+
+
+def bits_list_formatter(bits_data: list) -> str:
+    """
+    Recebe uma lista de bits (0 e 1) e retorna uma string formatada.
+    Ex: [0, 1, 1, 0] -> "0110"
+    """
+    try:
+        # Garante que é uma lista plana e converte cada item para string
+        return "".join(str(int(bit)) for bit in bits_data)
+    except Exception:
+        return str(bits_data)
+
+def byte_formarter(data: bytes) -> str:
+    """
+    Formata bytes para visualização binária.
+    """
+    return ' '.join(f'{b:08b}' for b in data)

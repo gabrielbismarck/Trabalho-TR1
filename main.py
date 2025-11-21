@@ -1,7 +1,7 @@
-from CamadaFisica.nrz_polar import codificador_nrz_polar, decodificador_nrz_polar,  plotagem_nrz
-from CamadaFisica.manchester import codificador_manchester, decodificador_manchester, plotagem_manchester
-from CamadaFisica.bipolar import codificador_bipolar, decodificador_bipolar, plotagem_bipolar
-from CamadaEnlace.enquadramentoDados import enquadrar_contagem_caracteres, desenquadrar_contagem_caracteres, enquadrar_flag_insercao_bit, desenquadrar_flag_insercao_bit, enquadrar_flag_insercao_byte, desenquadrar_flag_insercao_byte
+from Fisica.nrz_polar import codificador_nrz_polar, decodificador_nrz_polar,  plotagem_nrz
+from Fisica.manchester import codificador_manchester, decodificador_manchester, plotagem_manchester
+from Fisica.bipolar import codificador_bipolar, decodificador_bipolar, plotagem_bipolar
+from Enlace.enquadramentoDados import enquadrar_contagem_caracteres, desenquadrar_contagem_caracteres, enquadrar_flag_insercao_bit, desenquadrar_flag_insercao_bit, enquadrar_flag_insercao_byte, desenquadrar_flag_insercao_byte
 
 def main():
     bits = [1, 0, 1, 1, 0, 0, 1]
