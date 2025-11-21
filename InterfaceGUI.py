@@ -145,62 +145,34 @@ class App(ctk.CTk):
         self.update_idletasks()
 
         try:
-            # 1. TX
+            #TX
             sinal_tx, bits_enviados = self.tx.processar(texto_input, mod_digital, enquadramento, tipo_erro)
             
-            # 2. Meio (Ruído)
+            #Meio (Ruído)
             sinal_com_ruido = self.meio.transmitir(sinal_tx, sigma)
             
-            # 3. RX
+            #RX
             texto_recuperado, bits_rx_raw = self.rx.decodificar(sinal_com_ruido, mod_digital, enquadramento, tipo_erro)
             bits_recebidos = list(bits_rx_raw)
 
-            # 4. ANÁLISE DE ERROS (VISÃO DE DEUS)
-            # Compara o que saiu do TX com o que chegou no RX (antes de decodificar enlace)
-            num_erros = 0
-            indices_erro = []
-            
-            # Ajusta tamanho para comparação (pega o menor)
-            tamanho_comp = min(len(bits_enviados), len(bits_recebidos))
-            for i in range(tamanho_comp):
-                if bits_enviados[i] != bits_recebidos[i]:
-                    num_erros += 1
-                    indices_erro.append(i)
-            
-            # Soma diferença de tamanho como erro também (perda de bit)
-            num_erros += abs(len(bits_enviados) - len(bits_recebidos))
-
-            # 5. ATUALIZA GUI
+            # ATUALIZA GUI (GRÁFICOS E LABELS)
             self.atualizar_graficos(mod_digital, mod_portadora, sinal_com_ruido, bits_enviados)
             
-            # Atualiza Labels
             if "[Erro" in texto_recuperado:
                 self.status.configure(text="ERRO DETECTADO PELA CAMADA DE ENLACE", text_color="red")
             else:
-                self.status.configure(text="Recepção com Sucesso", text_color="#00FF00") # Verde
+                self.status.configure(text="Recepção com Sucesso", text_color="#00FF00")
 
-            self.label_ber.configure(text=f"Bits Errados: {num_erros} / {len(bits_enviados)}")
             self.texto_recebido.configure(text=f"Texto Recebido: {texto_recuperado}")
 
-            # 6. EXIBIÇÃO DOS BITS COM DESTAQUE EM VERMELHO
+            #EXIBIÇÃO DOS BITS (SIMPLIFICADA)
             self.bits_recebidos_texto.configure(state="normal")
             self.bits_recebidos_texto.delete("1.0", "end")
             
-            # Monta o texto colorindo bit a bit
-            str_bits = ""
-            for i in range(len(bits_recebidos)):
-                bit_val = str(bits_recebidos[i])
-                tag = "normal"
-                
-                if i in indices_erro:
-                    tag = "erro"
-                
-                # Adiciona espaço a cada 8 bits
-                if i > 0 and i % 8 == 0:
-                    self.bits_recebidos_texto._textbox.insert("end", " ", "normal")
+            str_bits = "".join(map(str, bits_recebidos))
+            str_bits = " ".join([str_bits[i:i+8] for i in range(0, len(str_bits), 8)])
 
-                self.bits_recebidos_texto._textbox.insert("end", bit_val, tag)
-
+            self.bits_recebidos_texto.insert("1.0", str_bits)
             self.bits_recebidos_texto.configure(state="disabled")
 
         except Exception as e:
