@@ -176,8 +176,6 @@ class App(ctk.CTk):
             # Atualiza Labels
             if "[Erro" in texto_recuperado:
                 self.status.configure(text="ERRO DETECTADO PELA CAMADA DE ENLACE", text_color="red")
-            elif num_erros > 0:
-                 self.status.configure(text="ALERTA: BITS CORROMPIDOS (Passaram pelo Enlace)", text_color="orange")
             else:
                 self.status.configure(text="Recepção com Sucesso", text_color="#00FF00") # Verde
 
