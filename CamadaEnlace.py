@@ -1,4 +1,3 @@
-# Arquivo: CamadaEnlace.py
 import Enlace.enquadramentoDados as enquadramentoDados
 import Enlace.errorDetection as errorDetection
 import Enlace.errorCorrection as errorCorrection
