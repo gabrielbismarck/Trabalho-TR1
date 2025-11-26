@@ -124,6 +124,10 @@ def plotagem_bipolar(bits, amostras_por_bit=50):
     plt.tight_layout()
     plt.show()
 
+# ==================================================================
+#                           ANALÓGICOS
+# ==================================================================
+
 # ================== AMPLITUDE SHIFT KEYING (ASK) ==================
 def modulador_ask(bits, fc=2000, A_1 = 1.0, A_0 = 0.0, amostras_por_bit=50):
     bits = np.array(bits, dtype=int)
@@ -388,19 +392,17 @@ class CamadaFisica:
         else:
             raise ValueError(f"Modulação digital desconhecida: {tipo}")
     
-    def modular_analogico(self, sinal_digital, tipo):
+    def modular_analogico(self, bits=None, sinal_digital=None, tipo="ASK"):
         # TODO: Implementar ASK, FSK, PSK, QAM
         # Por enquanto retorna o próprio sinal digital para teste
         if tipo == "ASK":
-            return modulador_ask(sinal_digital)
+            return modulador_ask(bits)
         elif tipo == "FSK":
-            return modulador_fsk(sinal_digital)
-        elif tipo == "PSK":
-            return modulador_bpsk(sinal_digital)
+            return modulador_fsk(bits)
         elif tipo == "QPSK":
-            return modulador_qpsk(sinal_digital)
+            return modulador_qpsk(bits)
         elif tipo == "16QAM":
-            return modulador_16qam(sinal_digital)
+            return modulador_16qam(bits)
         
         else:
             ValueError(f"Modulação analogica desconhecida: {tipo}")
@@ -411,8 +413,6 @@ class CamadaFisica:
             return demodulador_ask(sinal_analogico)
         elif tipo == "FSK":
             return demodulador_fsk(sinal_analogico)
-        elif tipo == "PSK":
-            return demodulador_bpsk(sinal_analogico)
         elif tipo == "QPSK":
             return demodulador_qpsk(sinal_analogico)
         elif tipo == "16QAM":

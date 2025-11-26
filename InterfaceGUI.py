@@ -55,8 +55,8 @@ class App(ctk.CTk):
         self.mod_portadora_var = ctk.StringVar(value="ASK")
         ctk.CTkRadioButton(self.mod_portadora_frame, text="ASK", variable=self.mod_portadora_var, value="ASK").pack(pady=5, padx=20, anchor="w")
         ctk.CTkRadioButton(self.mod_portadora_frame, text="FSK", variable=self.mod_portadora_var, value="FSK").pack(pady=5, padx=20, anchor="w")
-        ctk.CTkRadioButton(self.mod_portadora_frame, text="PSK (QPSK)", variable=self.mod_portadora_var, value="PSK").pack(pady=5, padx=20, anchor="w")
-        ctk.CTkRadioButton(self.mod_portadora_frame, text="16-QAM", variable=self.mod_portadora_var, value="16-QAM").pack(pady=5, padx=20, anchor="w")
+        ctk.CTkRadioButton(self.mod_portadora_frame, text="PSK (QPSK)", variable=self.mod_portadora_var, value="QPSK").pack(pady=5, padx=20, anchor="w")
+        ctk.CTkRadioButton(self.mod_portadora_frame, text="16-QAM", variable=self.mod_portadora_var, value="16QAM").pack(pady=5, padx=20, anchor="w")
 
         # 4. Enquadramento
         self.enquadramento_frame = ctk.CTkFrame(self.control_frame)
@@ -146,17 +146,23 @@ class App(ctk.CTk):
 
         try:
             #TX
-            sinal_tx, bits_enviados = self.tx.processar(texto_input, mod_digital, enquadramento, tipo_erro)
+            #sinal_tx, bits_enviados = self.tx.processar(texto_input, mod_digital, enquadramento, tipo_erro)
             
+            sinal_digital, sinal_modulado, bits_enviados = self.tx.processar(texto_input, mod_digital, mod_portadora, enquadramento, tipo_erro)
+
             #Meio (Ruído)
-            sinal_com_ruido = self.meio.transmitir(sinal_tx, sigma)
+            sinal_com_ruido = self.meio.transmitir(sinal_modulado, sigma)
             
             #RX
-            texto_recuperado, bits_rx_raw = self.rx.decodificar(sinal_com_ruido, mod_digital, enquadramento, tipo_erro)
+            # texto_recuperado, bits_rx_raw = self.rx.decodificar(sinal_com_ruido, mod_digital, enquadramento, tipo_erro)
+            texto_recuperado, bits_rx_raw = self.rx.decodificar(sinal_com_ruido, mod_digital, mod_portadora, enquadramento, tipo_erro)
+
             bits_recebidos = list(bits_rx_raw)
 
             # ATUALIZA GUI (GRÁFICOS E LABELS)
-            self.atualizar_graficos(mod_digital, mod_portadora, sinal_com_ruido, bits_enviados)
+            # self.atualizar_graficos(mod_digital, mod_portadora, sinal_com_ruido, bits_enviados)
+
+            self.atualizar_graficos(tipo_digital=mod_digital, tipo_portadora=mod_portadora, sinal_digital=sinal_digital, sinal_portadora=sinal_com_ruido, bits_referencia=bits_enviados)
             
             if "[Erro" in texto_recuperado:
                 self.status.configure(text="ERRO DETECTADO PELA CAMADA DE ENLACE", text_color="red")
@@ -196,22 +202,39 @@ class App(ctk.CTk):
         self.canvas_portadora.draw()
         self.canvas_portadora.get_tk_widget().pack(fill="both", expand=True)
 
-    def atualizar_graficos(self, tipo_digital, tipo_portadora, sinal_y, bits_referencia):
+    def atualizar_graficos(self, tipo_digital, tipo_portadora, sinal_digital, sinal_portadora, bits_referencia):
+        """
+        Agora recebe dois sinais:
+          - sinal_digital: amostras geradas pela codificação digital (NRZ/Manchester/Bipolar)
+          - sinal_portadora: sinal modulado (ASK/FSK/QPSK/16QAM) — já pode conter ruído
+        """
+
+        # Plota o sinal digital (banda-base)
         self.ax_digital.clear()
-        self.ax_digital.plot(sinal_y, color="#00ffff", linewidth=1.2) 
-        self.ax_digital.set_title(f"RX (Sinal Digital + Ruído): {tipo_digital}")
+        if sinal_digital is not None and len(sinal_digital) > 0:
+            self.ax_digital.plot(sinal_digital, color="#00ffff", linewidth=1.2)
+            self.ax_digital.set_title(f"Sinal Digital ({tipo_digital})")
+        else:
+            self.ax_digital.set_title("Sinal Digital (vazio)")
         self.ax_digital.grid(True, alpha=0.3)
-        self.ax_digital.set_ylim(-3.0, 3.0) 
+        # Ajuste visual: mantemos amplitude visível para NRZ/Manchester/Bipolar
+        self.ax_digital.set_ylim(-3.0, 3.0)
         self.canvas_digital.draw()
-        
-        # Placeholder Portadora
+
+        # Plota o sinal modulado (portadora)
         self.ax_portadora.clear()
-        x_port = np.linspace(0, len(sinal_y), len(sinal_y))
-        y_port = np.sin(x_port * 0.1) * (1 if len(sinal_y) > 0 else 0)
-        self.ax_portadora.plot(x_port, y_port, color="#ffaa00", linewidth=1) 
-        self.ax_portadora.set_title(f"Portadora ({tipo_portadora}) - [Simulação]")
-        self.ax_portadora.grid(True, alpha=0.3)
-        self.canvas_portadora.draw()
+        if sinal_portadora is not None and len(sinal_portadora) > 0:
+           
+            self.ax_portadora.plot(sinal_portadora, color="#ffaa00", linewidth=1)
+
+            self.ax_portadora.set_title(f"Portadora ({tipo_portadora}) - Sinal Modulado")
+            self.ax_portadora.grid(True, alpha=0.3)
+
+        else:
+            self.ax_portadora.set_title("Portadora (vazio)")
+            self.ax_portadora.grid(True, alpha=0.3)
+
+        self.canvas_portadora.draw()        
 
 if __name__ == "__main__":
     app = App()

@@ -15,7 +15,7 @@ class Transmissor:
             bits.extend([int(b) for b in bin_str])
         return np.array(bits)
 
-    def processar(self, texto, mod_digital, tipo_enquadramento, tipo_erro="Bit de Paridade Par"):
+    def processar(self, texto, mod_digital, mod_portadora, tipo_enquadramento, tipo_erro="Bit de Paridade Par"):
         """
         Fluxo: Texto -> Bytes -> (Erro) -> (Enquadramento) -> Bits -> Modulação
         """
@@ -34,6 +34,7 @@ class Transmissor:
 
         # Gera o sinal elétrico (amostras)
         sinal_digital = self.fisica.codificar_digital(quadro_bits, mod_digital)
-        
+
+        sinal_modulado = self.fisica.modular_analogico(bits=quadro_bits, sinal_digital=sinal_digital, tipo=mod_portadora)
         # Retorna o sinal para o meio e os bits para plotagem
-        return sinal_digital, quadro_bits
+        return sinal_digital, sinal_modulado,quadro_bits

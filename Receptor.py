@@ -23,13 +23,16 @@ class Receptor:
             
         return bytes(bytes_lista)
 
-    def decodificar(self, sinal, mod_digital, tipo_enquadramento, tipo_erro="Bit de Paridade Par"):
+    def decodificar(self, sinal, mod_digital, tipo_enquadramento, tipo_erro="Bit de Paridade Par", mod_portadora="ASK"):
         """
         Fluxo: Sinal -> Demodulação -> Bits -> Bytes -> (Desenquadramento) -> (Verificação) -> Texto
         """
         try:
+
+            bits_demodulados = self.fisica.demodular_analogico(sinal, tipo=mod_portadora)
+
             # 1. Camada Física: Decodifica o sinal digital -> Bits
-            bits_recebidos = self.fisica.decodificar_digital(sinal, mod_digital)
+            bits_recebidos = self.fisica.decodificar_digital(bits_demodulados, mod_digital)
             
             # 2. Interface Física-Enlace: Bits -> Bytes
             bytes_quadro = self.bits_para_bytes(bits_recebidos)
