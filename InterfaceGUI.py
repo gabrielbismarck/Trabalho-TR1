@@ -19,9 +19,9 @@ class App(ctk.CTk):
         self.title("Simulador de Camada Física e de Enlace - TR1")
         self.geometry("1400x950") # Aumentei um pouco a altura
 
-        self.tx = Transmissor(amostras_por_bit=10)
+        self.tx = Transmissor(amostras_por_bit=50)
         self.meio = MeioDeComunicacao()
-        self.rx = Receptor(amostras_por_bit=10)
+        self.rx = Receptor(amostras_por_bit=50)
 
         # --- LAYOUT ---
         self.control_frame = ctk.CTkFrame(self, width=350) 
@@ -212,13 +212,13 @@ class App(ctk.CTk):
         # Plota o sinal digital (banda-base)
         self.ax_digital.clear()
         if sinal_digital is not None and len(sinal_digital) > 0:
-            self.ax_digital.plot(sinal_digital, color="#00ffff", linewidth=1.2)
+            self.ax_digital.plot(sinal_digital, color="#0b1166", linewidth=1.2)
             self.ax_digital.set_title(f"Sinal Digital ({tipo_digital})")
         else:
             self.ax_digital.set_title("Sinal Digital (vazio)")
         self.ax_digital.grid(True, alpha=0.3)
         # Ajuste visual: mantemos amplitude visível para NRZ/Manchester/Bipolar
-        self.ax_digital.set_ylim(-3.0, 3.0)
+        self.ax_digital.set_ylim(-2.0, 2.0)
         self.canvas_digital.draw()
 
         # Plota o sinal modulado (portadora)

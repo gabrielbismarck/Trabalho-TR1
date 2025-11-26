@@ -2,14 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # =========================== NRZ POLAR ===========================
-def codificador_nrz_polar(bits, amostras_por_bit=50):
+def codificador_nrz_polar(bits, amostras_por_bit=10):
     bits = np.array(bits, dtype=int)
     niveis = np.where(bits == 1, 1.0, -1.0)
     sinal = np.repeat(niveis, amostras_por_bit)
     return sinal
 
 
-def decodificador_nrz_polar(sinal, amostras_por_bit=50):
+def decodificador_nrz_polar(sinal, amostras_por_bit=10):
     sinal = np.array(sinal, dtype=float)
     n_bits = len(sinal) // amostras_por_bit
 
@@ -20,7 +20,7 @@ def decodificador_nrz_polar(sinal, amostras_por_bit=50):
 
 # vizualização
 
-def plotagem_nrz(bits, amostras_por_bit=50):
+def plotagem_nrz(bits, amostras_por_bit=10):
     sinal = codificador_nrz_polar(bits, amostras_por_bit)
 
     plt.figure(figsize=(10, 3))
@@ -34,7 +34,7 @@ def plotagem_nrz(bits, amostras_por_bit=50):
 
 
 # =========================== MANCHESTER ===========================
-def codificador_manchester(bits, amostras_por_bit=50):
+def codificador_manchester(bits, amostras_por_bit=10):
     bits = np.array(bits, dtype=int)
     meio = amostras_por_bit // 2
     sinal = []
@@ -51,7 +51,7 @@ def codificador_manchester(bits, amostras_por_bit=50):
 
     return np.array(sinal)
 
-def decodificador_manchester(sinal, amostras_por_bit=50):
+def decodificador_manchester(sinal, amostras_por_bit=10):
     sinal = np.array(sinal, dtype=float)
     meio = amostras_por_bit // 2
     n_bits = len(sinal) // amostras_por_bit
@@ -65,7 +65,7 @@ def decodificador_manchester(sinal, amostras_por_bit=50):
 
     return np.array(bits)
 
-def plotagem_manchester(bits, amostras_por_bit=50):
+def plotagem_manchester(bits, amostras_por_bit=10):
     sinal = codificador_manchester(bits, amostras_por_bit)
 
     plt.figure(figsize=(10, 3))
@@ -78,7 +78,7 @@ def plotagem_manchester(bits, amostras_por_bit=50):
     plt.show()
 
 # ============================ BIPOLAR =============================
-def codificador_bipolar(bits, amostras_por_bit=50):
+def codificador_bipolar(bits, amostras_por_bit=10):
     bits = np.array(bits, dtype=int)
     sinal = []
 
@@ -93,7 +93,7 @@ def codificador_bipolar(bits, amostras_por_bit=50):
 
     return np.array(sinal)
 
-def decodificador_bipolar(sinal, amostras_por_bit=50):
+def decodificador_bipolar(sinal, amostras_por_bit=10):
 
     sinal = np.array(sinal, dtype=float)
     n_bits = len(sinal) // amostras_por_bit
@@ -112,7 +112,7 @@ def decodificador_bipolar(sinal, amostras_por_bit=50):
 
     return np.array(bits)
 
-def plotagem_bipolar(bits, amostras_por_bit=50):
+def plotagem_bipolar(bits, amostras_por_bit=10):
     sinal = codificador_bipolar(bits, amostras_por_bit)
 
     plt.figure(figsize=(10, 3))
@@ -129,7 +129,7 @@ def plotagem_bipolar(bits, amostras_por_bit=50):
 # ==================================================================
 
 # ================== AMPLITUDE SHIFT KEYING (ASK) ==================
-def modulador_ask(bits, fc=2000, A_1 = 1.0, A_0 = 0.0, amostras_por_bit=50):
+def modulador_ask(bits, fc=2000, A_1 = 1.0, A_0 = 0.0, amostras_por_bit=10):
     bits = np.array(bits, dtype=int)
     
     # cria um array t de números começanmdo em 0 e indo ate 1 (0 <= x < 1)com 50 = [amostras_por_bit] amostras
@@ -148,7 +148,7 @@ def modulador_ask(bits, fc=2000, A_1 = 1.0, A_0 = 0.0, amostras_por_bit=50):
 
     return np.array(sinal)
 
-def demodulador_ask(sinal, fc=2000, amostras_por_bit=50):
+def demodulador_ask(sinal, fc=2000, amostras_por_bit=10):
     # cria um array t de números começanmdo em 0 e indo ate 1 (0 <= x < 1)com 50 = [amostras_por_bit] amostras
     t = np.linspace(0, 1, amostras_por_bit, endpoint=False)
     
@@ -175,7 +175,7 @@ def demodulador_ask(sinal, fc=2000, amostras_por_bit=50):
     return np.array(bits)
 
 # ================== FREQUENCY SHIFT KEYING (FSK) ==================
-def modulador_fsk(bits, f_1 = 1000, f_0 = 2000, amostras_por_bit=50):
+def modulador_fsk(bits, f_1 = 1000, f_0 = 2000, amostras_por_bit=10):
     bits = np.array(bits, dtype=int)
     
     # cria um array t de números commencendo em 0 e indo ate 1 (0 <= x < 1)com 50 = [amostras_por_bit] amostras
@@ -193,7 +193,7 @@ def modulador_fsk(bits, f_1 = 1000, f_0 = 2000, amostras_por_bit=50):
 
     return np.array(sinal)
 
-def demodulador_fsk (sinal, f_1 = 1000, f_0 = 2000, amostras_por_bit=50):
+def demodulador_fsk (sinal, f_1 = 1000, f_0 = 2000, amostras_por_bit=10):
     t = np.linspace(0, 1, amostras_por_bit, endpoint=False)
     portadora_0 = np.sin(2 * np.pi * f_0 * t)
     portadora_1 = np.sin(2 * np.pi * f_1 * t)
@@ -222,7 +222,7 @@ mapa_fase_qpsk = {
     (1, 0): 7*np.pi / 4  # 315°
 }
 
-def  modulador_qpsk(bits, fc=2000, amostras_por_bit=50):
+def  modulador_qpsk(bits, fc=2000, amostras_por_bit=10):
     bits = np.array(bits, dtype=int)
 
     # Garante que o número de bits seja multiplo de 2
@@ -363,7 +363,7 @@ def demodulador_16qam(sinal, fc=2000, amostras_por_simbolo=50):
 
 
 class CamadaFisica:
-    def __init__(self, amostras_por_bit=50):
+    def __init__(self, amostras_por_bit=10):
         self.amostras_por_bit = amostras_por_bit
 
     def codificar_digital(self, bits, tipo):
