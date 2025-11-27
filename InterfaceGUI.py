@@ -155,7 +155,7 @@ class App(ctk.CTk):
             
             #RX
             # texto_recuperado, bits_rx_raw = self.rx.decodificar(sinal_com_ruido, mod_digital, enquadramento, tipo_erro)
-            texto_recuperado, bits_rx_raw = self.rx.decodificar(sinal_com_ruido, mod_digital, mod_portadora, enquadramento, tipo_erro)
+            texto_recuperado, bits_rx_raw = self.rx.decodificar(sinal=sinal_com_ruido, mod_digital=mod_digital, tipo_enquadramento=enquadramento, tipo_erro=tipo_erro, mod_portadora=mod_portadora)
 
             bits_recebidos = list(bits_rx_raw)
 
